@@ -4,11 +4,11 @@ public class RecursiveMapDiff {
 
   static diff(a, b ) {
     def result = []
-    rdiff(a,b,result)
+    rdiff(a,b,result, '')
     result
   }
 
-  static rdiff(a, b, changeSet ) {
+  static rdiff(a, b, changeSet, parentPath ) {
     def a_keys = a.keySet().sort()
     def b_keys = b.keySet().sort()
 
@@ -24,17 +24,16 @@ public class RecursiveMapDiff {
         // The keys match - see if the values do - If so, no change, if not, change
         a_key = a_iterator.hasNext() ? a_iterator.next() : null
         b_key = b_iterator.hasNext() ? b_iterator.next() : null
-        changeSet.add([op:'equal']);
       }
       else if ( ( b_key != null ) && ( ( a_key == null ) || ( a_key.compareTo(b_key) > 0 ) ) ) {
         // b_key was added in b
-        changeSet.add([op:'mapAdd',on:'root',key:b_key,value:b[b_key]])
+        changeSet.add([op:'mapAdd',on:parentPath,key:b_key,value:b[b_key]])
         b_key = b_iterator.hasNext() ? b_iterator.next() : null
       }
       else {
         // a_key was removed in b
+        changeSet.add([op:'mapDel',on:parentPath,key:a_key])
         a_key = a_iterator.hasNext() ? a_iterator.next() : null
-        changeSet.add([op:'mapRemove',on:'root',key:a_key,value:a[a_key]])
       }
 
     }

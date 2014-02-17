@@ -8,8 +8,11 @@ class KIMapDiffSpock extends spock.lang.Specification {
         RecursiveMapDiff.diff(a,b).equals(result)
 
         where:
-        a       | b               | result
-        [:]     | [:]             | []
-        [:]     | [a:1]           | [[op:'mapAdd',on:'root',key:'a',value:1]]
+        a           | b               | result
+        [:]         | [:]             | []
+        [:]         | [a:1]           | [[op:'mapAdd',on:'',key:'a',value:1]]
+        [a:1]       | [a:1,b:2]       | [[op:'mapAdd',on:'',key:'b',value:2]]
+        [a:1,c:3]   | [a:1,b:2,c:3]   | [[op:'mapAdd',on:'',key:'b',value:2]]
+        [a:1,c:3]   | [a:1]           | [[op:'mapDel',on:'',key:'c']]
     }
 }  
