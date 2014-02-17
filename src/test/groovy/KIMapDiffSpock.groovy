@@ -1,17 +1,15 @@
-
-
+import com.k_int.groovy.utils.*
 import spock.lang.*
 
 class KIMapDiffSpock extends spock.lang.Specification {
 
-    def "length of Spock's and his friends' names"() {
+    def "Map Diff Works"() {
         expect:
-        name.size() == length
+        RecursiveMapDiff.diff(a,b).equals(result)
 
         where:
-        name     | length
-        "Spock"  | 5
-        "Kirk"   | 4
-        "Scotty" | 6
+        a       | b               | result
+        [:]     | [:]             | []
+        [:]     | [a:1]           | [[op:'mapAdd',on:'root',key:'a',value:1]]
     }
 }  
