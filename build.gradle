@@ -1,0 +1,59 @@
+apply plugin: 'groovy'
+apply plugin:'application'
+apply plugin: 'maven-publish'
+
+
+// file:///home/ibbo/.gvm/gradle/1.10/docs/userguide/publishing_maven.html
+
+mainClassName = 'org.gokb.client.DiffNotifier'
+defaultTasks 'clean', 'build'
+
+configurations{
+    providedCompile
+}
+
+repositories {
+  mavenCentral()
+}
+ 
+dependencies {
+  groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.5'
+  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+  compile (group:'org.codehaus.groovy.modules.http-builder', name:'http-builder', version:'0.5.2') {
+    exclude module: 'groovy'
+  }
+}
+
+task uberjar(type: Jar) {
+    from files(sourceSets.main.output.classesDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    manifest {
+        attributes 'Main-Class': 'org.gokb.client.DiffNotifier'
+    }
+}
+
+publishing {
+    publications {
+        kiGroovyUtils(MavenPublication) {
+            groupId 'com.k-int'
+            version '1.0-SNAPSHOT'
+            artifactId 'kiGroovyUtils'
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            // url "$buildDir/repo" // change to point to your repo, e.g. http://my.org/repo
+            // url "http://maven.k-int.com/nexus" // change to point to your repo, e.g. http://my.org/repo
+            // url mavenServer+mavenReleases
+            url mavenServer+mavenSnapshots
+            credentials {
+                username = repoUsername
+                password = repoPassword
+            }
+        }
+    }
+}
+
