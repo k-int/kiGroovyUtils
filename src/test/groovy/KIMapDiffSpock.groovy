@@ -14,5 +14,7 @@ class KIMapDiffSpock extends spock.lang.Specification {
         [a:1]       | [a:1,b:2]       | [[op:'mapAdd',on:'',key:'b',value:2]]
         [a:1,c:3]   | [a:1,b:2,c:3]   | [[op:'mapAdd',on:'',key:'b',value:2]]
         [a:1,c:3]   | [a:1]           | [[op:'mapDel',on:'',key:'c']]
+        [a:1,c:3]   | [a:1,c:4]       | [[op:'mapChange',on:'',key:'c', value:4]]
+        [a:1,c:3]   | [a:1,c:4,d:5]   | [[op:'mapChange',on:'',key:'c', value:4],[op:'mapAdd',on:'',key:'d',value:5]]
     }
 }  

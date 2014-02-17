@@ -22,6 +22,11 @@ public class RecursiveMapDiff {
 
       if ( ( a_key != null ) && ( b_key != null ) && ( a_key == b_key) ) {
         // The keys match - see if the values do - If so, no change, if not, change
+        if ( a[a_key].equals(b[b_key]) ) {
+        }
+        else {
+          changeSet.add([op:'mapChange',on:parentPath,key:b_key,value:b[b_key]])
+        }
         a_key = a_iterator.hasNext() ? a_iterator.next() : null
         b_key = b_iterator.hasNext() ? b_iterator.next() : null
       }
